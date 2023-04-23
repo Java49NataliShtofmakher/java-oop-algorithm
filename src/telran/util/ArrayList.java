@@ -2,6 +2,7 @@ package telran.util;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.function.Predicate;
 
 public class ArrayList<T> implements List<T> {
 
@@ -142,6 +143,47 @@ public class ArrayList<T> implements List<T> {
 			}
 			size--;
 		}
+	}
+
+	@Override
+	public int indexOf(Predicate<T> predicate) {
+		int res = -1;
+		int index = 0;
+		while (index < size && res == -1) {
+			if (predicate.test(array[index])) {
+				res = index;
+			}
+			index++;
+		}
+		return res;
+	}
+
+	@Override
+	public int lasrIndexOf(Predicate<T> predicate) {
+		int res = -1;
+		int index = size - 1;
+		while (index >= 0 && res == -1) {
+			if (predicate.test(array[index])) {
+				res = index;
+			}
+			index--;
+		}
+		return res;
+	}
+
+	@Override
+	public boolean removeIf(Predicate<T> predicate) {
+		int oldSize =size;
+		int i = 0;
+		while(i<size) {
+			if(predicate.test(array[i])) {
+				remove(i);
+			}else {
+				i++;
+			}
+		}
+		
+		return oldSize < size;
 	}
 
 }
