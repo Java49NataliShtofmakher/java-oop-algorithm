@@ -1,5 +1,7 @@
 package telran.util;
 
+import java.util.function.Predicate;
+
 public interface Collection<T> {
 
 	boolean add(T obj);
@@ -9,4 +11,6 @@ public interface Collection<T> {
 	boolean remove(T pattern);
 
 	T[] toArray(T[]array);
+	
+	boolean removeIf(Predicate<T> predicate);
 }

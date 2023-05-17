@@ -54,7 +54,10 @@ public class ArrayList<T> implements List<T> {
 	}
 
 	@Override
-	public T get(int index) {
+	public T get(int index){
+		if(index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException(index);
+		}
 		T res = array[index];
 		return res;
 	}
@@ -91,15 +94,7 @@ public class ArrayList<T> implements List<T> {
 
 	@Override
 	public int indexOf(T pattern) {
-		int res = -1;
-		int index = 0;
-		while (index < size && res == -1) {
-			if (isEqual(array[index], pattern)) {
-				res = index;
-			}
-			index++;
-		}
-		return res;
+		return indexOf(obj -> isEqual(obj, pattern));
 	}
 
 	private boolean isEqual(T object, T pattern) {
@@ -109,15 +104,7 @@ public class ArrayList<T> implements List<T> {
 
 	@Override
 	public int lastIndexOf(T pattern) {
-		int res = -1;
-		int index = size - 1;
-		while (index >= 0 && res == -1) {
-			if (isEqual(array[index], pattern)) {
-				res = index;
-			}
-			index--;
-		}
-		return res;
+		return lastIndexOf(obj -> isEqual(obj, pattern));
 	}
 
 	@Override
@@ -159,7 +146,7 @@ public class ArrayList<T> implements List<T> {
 	}
 
 	@Override
-	public int lasrIndexOf(Predicate<T> predicate) {
+	public int lastIndexOf(Predicate<T> predicate) {
 		int res = -1;
 		int index = size - 1;
 		while (index >= 0 && res == -1) {

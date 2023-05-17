@@ -20,7 +20,7 @@ public interface List<T> extends Collection<T> {
 
 	int indexOf(Predicate<T> predicate);
 
-	int lasrIndexOf(Predicate<T> predicate);
+	int lastIndexOf(Predicate<T> predicate);
 
-	boolean removeIf(Predicate<T> predicate);
+	
 }

@@ -11,13 +11,12 @@ import telran.util.*;
 
 import org.junit.jupiter.api.Test;
 
-class ArrayListTest extends ListTest {
+class LinkedListTest extends ListTest {
 
 	@Override
 	protected <T> List<T> getList() {
-		return new ArrayList<>();
+		return new LinkedList<>();
 	}
 
 	
-
 }
