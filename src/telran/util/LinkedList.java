@@ -2,6 +2,8 @@ package telran.util;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
 public class LinkedList<T> implements List<T> {
@@ -9,6 +11,39 @@ public class LinkedList<T> implements List<T> {
 	Node<T> head;
 	Node<T> tail;
 	int size;
+
+	private class LinkedListIterator implements Iterator<T> {
+		Node<T> current = head;
+		boolean flNext = false;
+
+		@Override
+		public boolean hasNext() {
+
+			return current != null;
+		}
+
+		@Override
+		public T next() {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
+			T res = current.obj;
+			current = current.next;
+			flNext = true;
+			return res;
+		}
+
+		@Override
+		public void remove() {
+			if (!flNext) {
+				throw new IllegalStateException();
+			}
+			Node<T> removedNode = current != null ? current.prev : tail;
+			removeNode(removedNode);
+			flNext = false;
+		}
+
+	}
 
 	private static class Node<T> {
 		T obj;
@@ -30,34 +65,6 @@ public class LinkedList<T> implements List<T> {
 	public int size() {
 
 		return size;
-	}
-
-	@Override
-	public boolean remove(T pattern) {
-		boolean res = false;
-		int index = indexOf(pattern);
-		if (index > -1) {
-			res = true;
-			remove(index);
-		}
-		return res;
-	}
-
-	@Override
-	public T[] toArray(T[] ar) {
-		if (ar.length < size) {
-			ar = Arrays.copyOf(ar, size);
-		}
-		Node<T> current = head;
-		int index = 0;
-		while (current != null) {
-			ar[index++] = current.obj;
-			current = current.next;
-		}
-		if (ar.length > size) {
-			ar[size] = null;
-		}
-		return ar;
 	}
 
 	@Override
@@ -92,50 +99,35 @@ public class LinkedList<T> implements List<T> {
 	}
 
 	@Override
-	public int indexOf(T pattern) {
-		return indexOf(obj -> isEqual(obj, pattern));
-	}
-
-	@Override
-	public int lastIndexOf(T pattern) {
-		return lastIndexOf(obj -> isEqual(obj, pattern));
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void sort() {
-		sort((Comparator<T>)Comparator.naturalOrder());
-
-	}
-
-	@Override
 	public void sort(Comparator<T> comp) {
-		//TODO
-		//1. call the method toArray
-		//2. By applying Arrays.sort you sort the array from #1
-		//3. Passing over all LinkedList nodes and setting references to objects (T)
+		// TODO
+		// 1. call the method toArray
+		// 2. By applying Arrays.sort you sort the array from #1
+		// 3. Passing over all LinkedList nodes and setting references to objects (T)
 		// in the appropriate order from #2
 		T[] array = toArray();
-	    Arrays.sort(array, comp);
-	    Node<T>current = head;
-	    int index = 0;
-	    while(current != null) {
-	    	current.obj = array[index++];
-	    	current = current.next;
-	    }
+		Arrays.sort(array, comp);
+		Node<T> current = head;
+		int index = 0;
+		while (current != null) {
+			current.obj = array[index++];
+			current = current.next;
+		}
 
 	}
+
 	private T[] toArray() {
 		@SuppressWarnings("unchecked")
 		T[] array = (T[]) new Object[size];
-	    Node<T> current = head;
-	    int index = 0;
-	    while(current != null) {
-	    	array[index++] = current.obj;
-	    	current = current.next;
-	    }
-	    return array;
+		Node<T> current = head;
+		int index = 0;
+		while (current != null) {
+			array[index++] = current.obj;
+			current = current.next;
+		}
+		return array;
 	}
+
 	@Override
 	public int indexOf(Predicate<T> predicate) {
 		int index = 0;
@@ -156,22 +148,6 @@ public class LinkedList<T> implements List<T> {
 			index--;
 		}
 		return current == null ? -1 : index;
-	}
-
-	@Override
-	public boolean removeIf(Predicate<T> predicate) {
-		Node<T> current = head;
-		Node<T> next = null;
-		int oldSize = size;
-		while (current != null) {
-			next = current.next;
-			if (predicate.test(current.obj)) {
-				removeNode(current);
-			}
-			current = next;
-
-		}
-		return oldSize > size;
 	}
 
 	private void addNode(int index, Node<T> node) {
@@ -270,9 +246,9 @@ public class LinkedList<T> implements List<T> {
 		size--;
 	}
 
-	private boolean isEqual(T object, T pattern) {
-
-		return pattern == null  ? object == pattern : pattern.equals(object);
+	@Override
+	public Iterator<T> iterator() {
+		return new LinkedListIterator();
 	}
 
 }
