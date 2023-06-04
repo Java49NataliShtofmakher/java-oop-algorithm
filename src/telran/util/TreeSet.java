@@ -1,10 +1,8 @@
 package telran.util;
 
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.SortedSet;
 
 public class TreeSet<T> implements SortedSet<T> {
 	private static class Node<T> {
@@ -228,18 +226,20 @@ public class TreeSet<T> implements SortedSet<T> {
 	@Override
 	public T first() {
 		T res = null;
-		if (root != null) {
-			res = getLeast(root).obj;
+		if (root == null) {
+			throw new NoSuchElementException();
 		}
+		res = getLeast(root).obj;
 		return res;
 	}
 
 	@Override
 	public T last() {
 		T res = null;
-		if (root != null) {
-			res = getMostNodeFrom(root).obj;
+		if (root == null) {
+			throw new NoSuchElementException();
 		}
+		res = getMostNodeFrom(root).obj;
 		return res;
 	}
 

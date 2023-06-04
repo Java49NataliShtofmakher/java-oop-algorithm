@@ -36,9 +36,9 @@ public abstract class SortedSetTest extends SetTest {
 	}
 
 	private void runTestForExisted(SortedSet<Integer> sortedSet, boolean isCeiling) {
-		assertEquals(-20, isCeiling ? sortedSet.ceiling(10) : sortedSet.floor(10));
-		assertEquals(50, isCeiling ? sortedSet.ceiling(10) : sortedSet.floor(50));
-		assertEquals(100, isCeiling ? sortedSet.ceiling(10) : sortedSet.floor(100));
+		assertEquals(-20, isCeiling ? sortedSet.ceiling(-20) : sortedSet.floor(-20));
+		assertEquals(50, isCeiling ? sortedSet.ceiling(50) : sortedSet.floor(50));
+		assertEquals(100, isCeiling ? sortedSet.ceiling(100) : sortedSet.floor(100));
 	}
 
 	@Test
@@ -46,8 +46,8 @@ public abstract class SortedSetTest extends SetTest {
 		SortedSet<Integer> sortedSet = (SortedSet<Integer>) set;
 		runTestForExisted(sortedSet, false);
 		assertEquals(50, sortedSet.floor(55));
-		assertEquals(100, sortedSet.ceiling(101));
-		assertNull(sortedSet.ceiling(-40));
+		assertEquals(100, sortedSet.floor(101));
+		assertNull(sortedSet.floor(-40));
 	}
 
 }
