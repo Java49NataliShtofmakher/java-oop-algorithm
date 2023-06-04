@@ -100,7 +100,6 @@ public class LinkedList<T> implements List<T> {
 
 	@Override
 	public void sort(Comparator<T> comp) {
-		// TODO
 		// 1. call the method toArray
 		// 2. By applying Arrays.sort you sort the array from #1
 		// 3. Passing over all LinkedList nodes and setting references to objects (T)

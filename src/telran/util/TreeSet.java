@@ -1,10 +1,12 @@
 package telran.util;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.SortedSet;
 
-public class TreeSet<T> implements Set<T> {
+public class TreeSet<T> implements SortedSet<T> {
 	private static class Node<T> {
 		T obj;
 		Node<T> parent;
@@ -15,11 +17,26 @@ public class TreeSet<T> implements Set<T> {
 			this.obj = obj;
 		}
 
+		void setNulls() {
+			parent = null;
+			left = null;
+			right = null;
+			obj = null;
+		}
+
 	}
 
 	private Node<T> root;
 	private Comparator<T> comp;
 	private int size;
+
+	public TreeSet(Comparator<T> comp) {
+		this.comp = comp;
+	}
+
+	public TreeSet() {
+		this((Comparator<T>) Comparator.naturalOrder());
+	}
 
 	private class TreeSetIterator implements Iterator<T> {
 		Node<T> current;
@@ -145,6 +162,7 @@ public class TreeSet<T> implements Set<T> {
 		Node<T> node = getNode(pattern);
 		if (node != null) {
 			removeNode(node);
+			res = true;
 		}
 
 		return res;
@@ -175,6 +193,7 @@ public class TreeSet<T> implements Set<T> {
 	}
 
 	private void removeNonJunction(Node<T> node) {
+
 		Node<T> parent = node.parent;
 		Node<T> child = node.left == null ? node.right : node.left;
 		if (parent == null) {
@@ -185,10 +204,12 @@ public class TreeSet<T> implements Set<T> {
 			} else {
 				parent.right = child;
 			}
-			if (child != null) {
-				child.parent = parent;
-			}
+
 		}
+		if (child != null) {
+			child.parent = parent;
+		}
+		node.setNulls();
 
 	}
 
@@ -202,6 +223,50 @@ public class TreeSet<T> implements Set<T> {
 	public Iterator<T> iterator() {
 
 		return new TreeSetIterator();
+	}
+
+	@Override
+	public T first() {
+		T res = null;
+		if (root != null) {
+			res = getLeast(root).obj;
+		}
+		return res;
+	}
+
+	@Override
+	public T last() {
+		T res = null;
+		if (root != null) {
+			res = getMostNodeFrom(root).obj;
+		}
+		return res;
+	}
+
+	@Override
+	public T floor(T element) {
+
+		return floorCeiling(element, true);
+	}
+
+	@Override
+	public T ceiling(T element) {
+
+		return floorCeiling(element, false);
+	}
+
+	private T floorCeiling(T pattern, boolean isFloor) {
+		T res = null;
+		int compRes = 0;
+		Node<T> current = root;
+		while (current != null && (compRes = comp.compare(pattern, current.obj)) != 0) {
+			if ((compRes < 0 && !isFloor) || (compRes > 0 && isFloor)) {
+				res = current.obj;
+			}
+			current = compRes < 0 ? current.left : current.right;
+		}
+		return current == null ? res : current.obj;
+
 	}
 
 }
