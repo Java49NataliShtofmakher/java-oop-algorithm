@@ -46,6 +46,21 @@ public class LineRecursion {
 		return sum;
 	}
 
+	public static int[] reverse(int[] array) {
+		return reverse(array, 0, array.length - 1);
+	}
+
+	private static int[] reverse(int[] array, int left, int right) {
+
+		if (left < right) {
+			array[left] = array[left] + array[right];
+			array[right] = array[left] - array[right];
+			array[left] = array[left] - array[right];
+			reverse(array, left + 1, right - 1);
+		}
+		return array;
+	}
+
 	public static long square(int x) {
 		if (x == 0) {
 			return 0;
