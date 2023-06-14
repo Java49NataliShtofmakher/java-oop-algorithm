@@ -155,6 +155,25 @@ abstract public class CollectionTest {
 		assertEquals(0, bigCollection.size());
 	}
 
+	@Test
+	void sumEvenNumbersTest() {
+		assertEquals(170, collection.stream()
+				.filter(n -> n % 2 == 0)
+				.mapToInt(n -> n)
+				.sum());
+	}
+
+	@Test
+	void positiveEvenNumbersTest() {
+		int[] expected = { 10, 30, 50, 100};
+		assertArrayEquals(expected,
+				collection.stream()
+				.filter(n -> n > 0 && n % 2 == 0)
+				.sorted()
+				.mapToInt(n -> n)
+				.toArray());
+	}
+
 	protected int[] getRandomArray(int length) {
 		Random gen = new Random();
 		int[] res = new int[length];
